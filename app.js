@@ -33,6 +33,11 @@ prompt.get(['Symbol', 'WatchPrice'], function (err, result) {
                 console.log("You making money on "+symbol+"Price "+symbol_data.data.ask_price)   
             }
         })
+        .catch(function(error){
+            if(error.response.status === 404){
+                console.log("INVALID SYMBOL")
+            }
+           })
 
 }, refreshTime)
   
