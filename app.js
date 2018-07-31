@@ -28,7 +28,7 @@ prompt.get(['Symbol', 'WatchPrice'], function (err, result) {
   
         axios.get('https://api.robinhood.com/quotes/'+symbol+'/')
         .then((symbol_data) => {
-
+            console.log(symbol_data.data.ask_price+" => "+symbol)
             if(symbol_data.data.ask_price > watchPrice){
                 console.log("You making money on "+symbol+"Price "+symbol_data.data.ask_price)   
             }
