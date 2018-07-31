@@ -1,6 +1,18 @@
 var axios = require("axios");
 
-axios.get('https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=SNAP&interval=1min&apikey=VY7WKFSQR8I5B8H6')
-.then((data) => {
-    console.log(data.data)
-})
+var symbols = [{
+    symbol: "SNAP",
+    watchPrice: 12
+}]
+
+
+setInterval(function(){
+    symbols.map((data) => {
+        axios.get('https://api.robinhood.com/quotes/'+data.symbol+'/')
+        .then((data) => {
+            if(data.data.ask_price <= data.watchPrice){
+                console.log("You making money on"+data.symbol)   
+            }
+        })
+    })
+}, 60000)
