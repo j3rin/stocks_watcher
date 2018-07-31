@@ -1,18 +1,32 @@
 var axios = require("axios");
+var prompt = require('prompt');
+let symbol = []
+let refreshTime = 60000;
+prompt.start();
 
-var symbols = [{
-    symbol: "SNAP",
-    watchPrice: 12
-}]
+prompt.get(['Symbol', 'WatchPrice'], function (err, result) {
+  if (err) { return onErr(err); }
+  
+  let symbol = result.Symbol;
+  let watchPrice = result.WatchPrice;
 
+console.log("Every 60 seconds will refresh..............")
+    
+  setInterval(() => {
+  
+        axios.get('https://api.robinhood.com/quotes/'+symbol+'/')
+        .then((symbol_data) => {
 
-setInterval(function(){
-    symbols.map((data) => {
-        axios.get('https://api.robinhood.com/quotes/'+data.symbol+'/')
-        .then((data) => {
-            if(data.data.ask_price <= data.watchPrice){
-                console.log("You making money on"+data.symbol)   
+            if(symbol_data.data.ask_price > watchPrice){
+                console.log("You making money on "+symbol+"Price "+symbol_data.data.ask_price)   
             }
         })
-    })
-}, 60000)
+
+}, refreshTime)
+  
+});
+
+function onErr(err) {
+  console.log(err);
+  return 1;
+}
