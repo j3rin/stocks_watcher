@@ -10,8 +10,20 @@ prompt.get(['Symbol', 'WatchPrice'], function (err, result) {
   let symbol = result.Symbol;
   let watchPrice = result.WatchPrice;
 
-console.log("Every 60 seconds will refresh..............")
-    
+  axios.get('https://api.robinhood.com/quotes/'+symbol+'/')
+  .then((symbol_data) => {
+     console.log(symbol_data.data.ask_price+" => "+symbol)
+      if(symbol_data.data.ask_price > watchPrice){
+          console.log("You making money on "+symbol+" Price "+symbol_data.data.ask_price)   
+      }
+  })
+  .catch(function(error){
+   if(error.response.status === 404){
+       console.log("INVALID SYMBOL")
+   }
+  })
+
+  console.log("Every 60 seconds will refresh..............")
   setInterval(() => {
   
         axios.get('https://api.robinhood.com/quotes/'+symbol+'/')
